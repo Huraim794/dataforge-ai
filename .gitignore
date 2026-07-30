@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.venv/
+venv/
+.env
+
+# Node
+node_modules/
+frontend/dist/
+frontend/build/
+*.tsbuildinfo
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Data
+data/
+*.db
+*.sqlite
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Docker
+docker-data/
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml

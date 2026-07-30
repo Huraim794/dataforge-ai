@@ -1,0 +1,237 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  PYTHON_VERSION: "3.12"
+  NODE_VERSION: "20"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Run ruff check
+        run: ruff check backend/
+
+      - name: Run ruff format check
+        run: ruff format --check backend/
+
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          pip install -r backend/requirements.txt
+          pip install mypy
+
+      - name: Run mypy
+        run: mypy backend/ --ignore-missing-imports
+
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: dataforge_test
+          POSTGRES_USER: dataforge
+          POSTGRES_PASSWORD: dataforge
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          pip install -r backend/requirements.txt
+          pip install pytest pytest-asyncio pytest-cov
+
+      - name: Run tests
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql+asyncpg://dataforge:dataforge@localhost:5432/dataforge_test
+          DATABASE_SYNC_URL: postgresql://dataforge:dataforge@localhost:5432/dataforge_test
+          REDIS_URL: redis://localhost:6379/0
+          REDIS_QUEUE_URL: redis://localhost:6379/1
+          REDIS_CACHE_URL: redis://localhost:6379/2
+          ENVIRONMENT: test
+        run: |
+          pytest tests/ -v --cov=app --cov-report=xml --cov-report=term
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: backend/coverage.xml
+          fail_ci_if_error: false
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: frontend/package.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm install
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r backend/requirements.txt
+          pip install bandit
+
+      - name: Run bandit on backend
+        run: bandit -r backend/ -c pyproject.toml || bandit -r backend/ -ll
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: frontend/package.json
+
+      - name: Run npm audit
+        working-directory: frontend
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+  docker:
+    needs: [lint, type-check, test]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build API image
+        uses: docker/build-push-action@v5
+        with:
+          context: backend/
+          file: backend/Dockerfile
+          load: true
+          tags: dataforge-api:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build Worker image
+        uses: docker/build-push-action@v5
+        with:
+          context: backend/
+          file: backend/Dockerfile.worker
+          load: true
+          tags: dataforge-worker:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build Frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: frontend/
+          file: frontend/Dockerfile
+          load: true
+          tags: dataforge-frontend:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Start services with docker compose
+        run: |
+          docker compose -f infra/docker-compose.yml up -d
+          echo "Waiting for services to be healthy..."
+          sleep 15
+          docker compose -f infra/docker-compose.yml ps
+
+      - name: Smoke test - API health
+        run: |
+          for i in $(seq 1 10); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/health 2>/dev/null || echo "000")
+            if [ "$STATUS" = "200" ]; then
+              echo "API health check passed (HTTP 200)"
+              break
+            fi
+            echo "Attempt $i: API returned $STATUS, retrying..."
+            sleep 3
+          done
+          curl -s http://localhost:8000/health || echo "API health check failed"
+
+      - name: Smoke test - Frontend
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/ 2>/dev/null || echo "000")
+          if [ "$STATUS" = "200" ]; then
+            echo "Frontend health check passed (HTTP 200)"
+          else
+            echo "Frontend returned HTTP $STATUS"
+          fi
+
+      - name: Tear down
+        if: always()
+        run: docker compose -f infra/docker-compose.yml down -v
