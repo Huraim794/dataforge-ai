@@ -7,17 +7,17 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dataforge.backend.app.core.deps import (
+from app.core.deps import (
     get_current_user,
     get_db,
     verify_project_access,
 )
-from dataforge.backend.app.models.job import Job, JobStatus
-from dataforge.backend.app.models.project import ProjectMember
-from dataforge.backend.app.models.run import Run
+from app.models.job import Job, JobStatus
+from app.models.project import ProjectMember
+from app.models.run import Run
 from pydantic import BaseModel, Field
 
-from dataforge.backend.app.models.result import ExtractionResult, ScrapeResult
+from app.models.result import ExtractionResult, ScrapeResult
 
 router = APIRouter()
 

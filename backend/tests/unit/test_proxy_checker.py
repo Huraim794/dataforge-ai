@@ -1,4 +1,3 @@
-import pytest
 from app.proxy.checker import ProxyChecker
 
 

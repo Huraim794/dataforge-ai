@@ -7,16 +7,16 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dataforge.backend.app.core.deps import (
+from app.core.deps import (
     get_current_user,
     get_db,
     require_role,
     verify_project_access,
 )
-from dataforge.backend.app.models.proxy import Proxy, ProxyProtocol, ProxyStatus
+from app.models.proxy import Proxy, ProxyProtocol, ProxyStatus
 from pydantic import BaseModel, Field
 
-from dataforge.backend.app.proxy.checker import ProxyChecker
+from app.proxy.checker import ProxyChecker
 
 router = APIRouter()
 checker = ProxyChecker()

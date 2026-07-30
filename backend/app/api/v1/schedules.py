@@ -7,14 +7,14 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dataforge.backend.app.core.deps import (
+from app.core.deps import (
     get_current_user,
     get_db,
     verify_project_access,
 )
 from pydantic import BaseModel
 
-from dataforge.backend.app.models.schedule import Schedule, ScheduleInterval
+from app.models.schedule import Schedule, ScheduleInterval
 
 router = APIRouter()
 
@@ -112,10 +112,10 @@ async def create_schedule(
     await db.commit()
     await db.refresh(schedule)
 
-    from dataforge.backend.app.core.config import settings as app_settings
+    from app.core.config import settings as app_settings
 
     if app_settings.scheduler_enabled:
-        from dataforge.backend.app.main import job_scheduler
+        from app.main import job_scheduler
 
         if job_scheduler:
             await job_scheduler.add_schedule(schedule)

@@ -8,10 +8,10 @@ from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dataforge.backend.app.core.config import settings
-from dataforge.backend.app.core.deps import get_current_user, get_db
-from dataforge.backend.app.core.rate_limiter import login_limiter
-from dataforge.backend.app.core.security import (
+from app.core.config import settings
+from app.core.deps import get_current_user, get_db
+from app.core.rate_limiter import login_limiter
+from app.core.security import (
     create_access_token,
     create_refresh_token,
     generate_api_key,
@@ -20,7 +20,7 @@ from dataforge.backend.app.core.security import (
     verify_password,
     verify_token,
 )
-from dataforge.backend.app.models.user import APIKey, User, UserRole
+from app.models.user import APIKey, User, UserRole
 
 router = APIRouter()
 

@@ -9,12 +9,12 @@ from prometheus_client import generate_latest
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dataforge.backend.app.core.database import check_database_health
-from dataforge.backend.app.core.deps import get_current_user, get_db
-from dataforge.backend.app.core.redis import check_redis_health
-from dataforge.backend.app.models.job import Job, JobStatus
-from dataforge.backend.app.models.proxy import Proxy, ProxyStatus
-from dataforge.backend.app.monitoring.logger import get_logger
+from app.core.database import check_database_health
+from app.core.deps import get_current_user, get_db
+from app.core.redis import check_redis_health
+from app.models.job import Job, JobStatus
+from app.models.proxy import Proxy, ProxyStatus
+from app.monitoring.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -104,7 +104,7 @@ async def get_stats(
 async def get_queue_status(
     current_user: dict = Depends(get_current_user),
 ) -> Any:
-    from dataforge.backend.app.core.redis import get_queue_redis
+    from app.core.redis import get_queue_redis
 
     redis_client = await get_queue_redis()
     queues = {

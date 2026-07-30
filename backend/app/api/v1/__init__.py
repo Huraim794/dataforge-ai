@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from dataforge.backend.app.api.v1 import (
+from app.api.v1 import (
     auth,
     jobs,
     proxies,

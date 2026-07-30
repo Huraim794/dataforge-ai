@@ -6,8 +6,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dataforge.backend.app.core.deps import get_current_user, get_db, require_role
-from dataforge.backend.app.models.user import User
+from app.core.deps import get_current_user, get_db, require_role
+from app.models.user import User
 
 from pydantic import BaseModel
 

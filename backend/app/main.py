@@ -10,19 +10,19 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from prometheus_client import make_asgi_app
 
-from dataforge.backend.app.api.v1 import router as api_v1_router
-from dataforge.backend.app.core.config import settings
-from dataforge.backend.app.core.database import engine, Base
-from dataforge.backend.app.core.exceptions import DataForgeError
-from dataforge.backend.app.core.redis import close_redis
-from dataforge.backend.app.monitoring.logger import get_logger
-from dataforge.backend.app.proxy.manager import ProxyManager
-from dataforge.backend.app.scraping.browser_pool import BrowserPool
-from dataforge.backend.app.scraping.captcha import CAPTCHAHandler
-from dataforge.backend.app.scraping.engine import ScrapingEngine
-from dataforge.backend.app.scheduler.scheduler import JobScheduler
-from dataforge.backend.app.worker.queue import QueueManager
-from dataforge.backend.app.worker.tasks import TaskProcessor
+from app.api.v1 import router as api_v1_router
+from app.core.config import settings
+from app.core.database import engine, Base
+from app.core.exceptions import DataForgeError
+from app.core.redis import close_redis
+from app.monitoring.logger import get_logger
+from app.proxy.manager import ProxyManager
+from app.scraping.browser_pool import BrowserPool
+from app.scraping.captcha import CAPTCHAHandler
+from app.scraping.engine import ScrapingEngine
+from app.scheduler.scheduler import JobScheduler
+from app.worker.queue import QueueManager
+from app.worker.tasks import TaskProcessor
 
 logger = get_logger(__name__)
 
@@ -46,7 +46,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     start_time = time.time()
 
     # Create tables before starting services
-    from dataforge.backend.app.core.database import init_models
+    from app.core.database import init_models
 
     init_models()
     async with engine.begin() as conn:
@@ -180,8 +180,8 @@ async def root() -> dict:
 
 @app.get("/health")
 async def health() -> dict:
-    from dataforge.backend.app.core.database import check_database_health
-    from dataforge.backend.app.core.redis import check_redis_health
+    from app.core.database import check_database_health
+    from app.core.redis import check_redis_health
 
     db_ok = await check_database_health()
     redis_ok = await check_redis_health()

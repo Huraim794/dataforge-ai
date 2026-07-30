@@ -6,14 +6,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dataforge.backend.app.core.deps import (
+from app.core.deps import (
     get_current_user,
     get_db,
     verify_project_access,
 )
 from pydantic import BaseModel
 
-from dataforge.backend.app.models.project import (
+from app.models.project import (
     Project,
     ProjectMember,
     ProjectMemberRole,
