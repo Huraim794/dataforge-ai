@@ -66,7 +66,9 @@ class TaskProcessor:
 
         return True
 
-    async def _process_job(self, job_id: str, job_data: dict[str, Any], queue_name: str) -> None:
+    async def _process_job(
+        self, job_id: str, job_data: dict[str, Any], queue_name: str
+    ) -> None:
         start_time = time.time()
         run_id = None
 
@@ -146,7 +148,11 @@ class TaskProcessor:
 
             # Update run status
             async with async_session_factory() as session:
-                status = RunStatus.COMPLETED if scrape_result.get("success") else RunStatus.FAILED
+                status = (
+                    RunStatus.COMPLETED
+                    if scrape_result.get("success")
+                    else RunStatus.FAILED
+                )
                 await session.execute(
                     update(Run)
                     .where(Run.id == run_id)
@@ -162,7 +168,11 @@ class TaskProcessor:
 
             # Update job status
             async with async_session_factory() as session:
-                job_status = JobStatus.COMPLETED if scrape_result.get("success") else JobStatus.FAILED
+                job_status = (
+                    JobStatus.COMPLETED
+                    if scrape_result.get("success")
+                    else JobStatus.FAILED
+                )
                 await session.execute(
                     update(Job)
                     .where(Job.id == job_id)

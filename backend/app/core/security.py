@@ -56,7 +56,9 @@ def create_refresh_token(user_id: str) -> str:
     return jwt.encode(to_encode, settings.secret_key, algorithm=settings.jwt_algorithm)
 
 
-def verify_token(token: str, expected_type: Optional[str] = None) -> Optional[Dict[str, Any]]:
+def verify_token(
+    token: str, expected_type: Optional[str] = None
+) -> Optional[Dict[str, Any]]:
     try:
         payload = jwt.decode(
             token,
@@ -103,4 +105,5 @@ def hash_api_key(api_key: str) -> str:
 
 def generate_api_key() -> str:
     import secrets
+
     return f"df_{secrets.token_urlsafe(32)}"

@@ -28,7 +28,10 @@ class LLMClient:
     PROVIDER_CONFIGS = {
         "openai": {
             "base_url": "https://api.openai.com/v1",
-            "headers": lambda key: {"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+            "headers": lambda key: {
+                "Authorization": f"Bearer {key}",
+                "Content-Type": "application/json",
+            },
             "models": ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"],
             "cost_per_1k_prompt": 0.0025,
             "cost_per_1k_completion": 0.01,
@@ -42,14 +45,25 @@ class LLMClient:
         },
         "claude": {
             "base_url": "https://api.anthropic.com/v1",
-            "headers": lambda key: {"x-api-key": key, "Content-Type": "application/json", "anthropic-version": "2023-06-01"},
-            "models": ["claude-3-opus-20240229", "claude-3-sonnet-20240229", "claude-3-haiku-20240307"],
+            "headers": lambda key: {
+                "x-api-key": key,
+                "Content-Type": "application/json",
+                "anthropic-version": "2023-06-01",
+            },
+            "models": [
+                "claude-3-opus-20240229",
+                "claude-3-sonnet-20240229",
+                "claude-3-haiku-20240307",
+            ],
             "cost_per_1k_prompt": 0.003,
             "cost_per_1k_completion": 0.015,
         },
         "deepseek": {
             "base_url": "https://api.deepseek.com/v1",
-            "headers": lambda key: {"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+            "headers": lambda key: {
+                "Authorization": f"Bearer {key}",
+                "Content-Type": "application/json",
+            },
             "models": ["deepseek-chat", "deepseek-coder"],
             "cost_per_1k_prompt": 0.0005,
             "cost_per_1k_completion": 0.002,
@@ -88,19 +102,42 @@ class LLMClient:
 
         try:
             if self.provider == "openai":
-                return await self._call_openai(messages, model, temperature, max_tokens, response_format, timeout)
+                return await self._call_openai(
+                    messages, model, temperature, max_tokens, response_format, timeout
+                )
             elif self.provider == "gemini":
-                return await self._call_gemini(messages, model, temperature, max_tokens, timeout)
+                return await self._call_gemini(
+                    messages, model, temperature, max_tokens, timeout
+                )
             elif self.provider == "claude":
-                return await self._call_claude(messages, model, temperature, max_tokens, timeout)
+                return await self._call_claude(
+                    messages, model, temperature, max_tokens, timeout
+                )
             elif self.provider == "deepseek":
-                return await self._call_deepseek(messages, model, temperature, max_tokens, response_format, timeout)
+                return await self._call_deepseek(
+                    messages, model, temperature, max_tokens, response_format, timeout
+                )
             else:
-                return LLMResponse(content="", model=model, provider=self.provider, success=False, error=f"Unsupported provider: {self.provider}")
+                return LLMResponse(
+                    content="",
+                    model=model,
+                    provider=self.provider,
+                    success=False,
+                    error=f"Unsupported provider: {self.provider}",
+                )
 
         except Exception as e:
-            logger.error(f"LLM call failed: {e}", extra={"provider": self.provider, "model": model})
-            return LLMResponse(content="", model=model, provider=self.provider, success=False, error=str(e))
+            logger.error(
+                f"LLM call failed: {e}",
+                extra={"provider": self.provider, "model": model},
+            )
+            return LLMResponse(
+                content="",
+                model=model,
+                provider=self.provider,
+                success=False,
+                error=str(e),
+            )
 
     async def _call_openai(
         self,
@@ -133,8 +170,9 @@ class LLMClient:
         usage = data.get("usage", {})
         tokens_prompt = usage.get("prompt_tokens", 0)
         tokens_completion = usage.get("completion_tokens", 0)
-        cost = (tokens_prompt / 1000 * self._config["cost_per_1k_prompt"]) + \
-               (tokens_completion / 1000 * self._config["cost_per_1k_completion"])
+        cost = (tokens_prompt / 1000 * self._config["cost_per_1k_prompt"]) + (
+            tokens_completion / 1000 * self._config["cost_per_1k_completion"]
+        )
 
         return LLMResponse(
             content=choice["message"]["content"],
@@ -229,8 +267,9 @@ class LLMClient:
         usage = data.get("usage", {})
         tokens_input = usage.get("input_tokens", 0)
         tokens_output = usage.get("output_tokens", 0)
-        cost = (tokens_input / 1000 * self._config["cost_per_1k_prompt"]) + \
-               (tokens_output / 1000 * self._config["cost_per_1k_completion"])
+        cost = (tokens_input / 1000 * self._config["cost_per_1k_prompt"]) + (
+            tokens_output / 1000 * self._config["cost_per_1k_completion"]
+        )
 
         return LLMResponse(
             content=data["content"][0]["text"],
@@ -273,8 +312,9 @@ class LLMClient:
         usage = data.get("usage", {})
         tokens_prompt = usage.get("prompt_tokens", 0)
         tokens_completion = usage.get("completion_tokens", 0)
-        cost = (tokens_prompt / 1000 * self._config["cost_per_1k_prompt"]) + \
-               (tokens_completion / 1000 * self._config["cost_per_1k_completion"])
+        cost = (tokens_prompt / 1000 * self._config["cost_per_1k_prompt"]) + (
+            tokens_completion / 1000 * self._config["cost_per_1k_completion"]
+        )
 
         return LLMResponse(
             content=choice["message"]["content"],

@@ -242,7 +242,9 @@ class BrowserPool:
             metrics_collector.browser_pool_size.labels(status="healthy").set(
                 sum(1 for i in self._instances if i.is_healthy)
             )
-            metrics_collector.browser_pool_size.labels(status="total").set(len(self._instances))
+            metrics_collector.browser_pool_size.labels(status="total").set(
+                len(self._instances)
+            )
 
     @property
     def available_count(self) -> int:

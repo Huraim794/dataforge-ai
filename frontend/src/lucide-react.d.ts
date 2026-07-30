@@ -1,0 +1,31 @@
+declare module 'lucide-react' {
+  import { FC, SVGProps } from 'react'
+  export const LayoutDashboard: FC<SVGProps<SVGSVGElement>>
+  export const FileJson: FC<SVGProps<SVGSVGElement>>
+  export const Globe: FC<SVGProps<SVGSVGElement>>
+  export const Calendar: FC<SVGProps<SVGSVGElement>>
+  export const Bot: FC<SVGProps<SVGSVGElement>>
+  export const Settings: FC<SVGProps<SVGSVGElement>>
+  export const LogOut: FC<SVGProps<SVGSVGElement>>
+  export const Menu: FC<SVGProps<SVGSVGElement>>
+  export const X: FC<SVGProps<SVGSVGElement>>
+  export const ChevronDown: FC<SVGProps<SVGSVGElement>>
+  export const Activity: FC<SVGProps<SVGSVGElement>>
+  export const Users: FC<SVGProps<SVGSVGElement>>
+  export const Plus: FC<SVGProps<SVGSVGElement>>
+  export const Search: FC<SVGProps<SVGSVGElement>>
+  export const RefreshCw: FC<SVGProps<SVGSVGElement>>
+  export const CheckCircle2: FC<SVGProps<SVGSVGElement>>
+  export const XCircle: FC<SVGProps<SVGSVGElement>>
+  export const Clock: FC<SVGProps<SVGSVGElement>>
+  export const AlertTriangle: FC<SVGProps<SVGSVGElement>>
+  export const ArrowLeft: FC<SVGProps<SVGSVGElement>>
+  export const Trash2: FC<SVGProps<SVGSVGElement>>
+  export const Play: FC<SVGProps<SVGSVGElement>>
+  export const Pause: FC<SVGProps<SVGSVGElement>>
+  export const Key: FC<SVGProps<SVGSVGElement>>
+  export const Copy: FC<SVGProps<SVGSVGElement>>
+  export const Folder: FC<SVGProps<SVGSVGElement>>
+  export const Mail: FC<SVGProps<SVGSVGElement>>
+  export const Table: FC<SVGProps<SVGSVGElement>>
+}

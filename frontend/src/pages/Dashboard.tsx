@@ -10,7 +10,7 @@ import {
   Clock,
   AlertTriangle,
 } from 'lucide-react'
-import { monitoring, jobs, proxies } from '../services/api'
+import { monitoring, jobs } from '../services/api'
 
 function StatCard({
   title,

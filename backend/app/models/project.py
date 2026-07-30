@@ -26,8 +26,18 @@ class Project(TimestampMixin, Base):
     storage_limit_mb = Column(Integer, default=1024)
     created_by = Column(String(36), ForeignKey("users.id"), nullable=True)
 
-    members = relationship("ProjectMember", back_populates="project", cascade="all, delete-orphan", lazy="selectin")
-    targets = relationship("Target", back_populates="project", cascade="all, delete-orphan", lazy="selectin")
+    members = relationship(
+        "ProjectMember",
+        back_populates="project",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
+    targets = relationship(
+        "Target",
+        back_populates="project",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
     jobs = relationship("Job", back_populates="project", lazy="dynamic")
     schedules = relationship("Schedule", back_populates="project", lazy="dynamic")
     proxies = relationship("Proxy", back_populates="project", lazy="selectin")
@@ -36,9 +46,13 @@ class Project(TimestampMixin, Base):
 class ProjectMember(TimestampMixin, Base):
     __tablename__ = "project_members"
 
-    project_id = Column(String(36), ForeignKey("projects.id"), nullable=False, index=True)
+    project_id = Column(
+        String(36), ForeignKey("projects.id"), nullable=False, index=True
+    )
     user_id = Column(String(36), ForeignKey("users.id"), nullable=False, index=True)
-    role = Column(Enum(ProjectMemberRole), default=ProjectMemberRole.MEMBER, nullable=False)
+    role = Column(
+        Enum(ProjectMemberRole), default=ProjectMemberRole.MEMBER, nullable=False
+    )
 
     project = relationship("Project", back_populates="members")
     user = relationship("User", back_populates="projects")

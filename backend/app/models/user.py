@@ -2,7 +2,16 @@ from __future__ import annotations
 
 import enum
 
-from sqlalchemy import Boolean, Column, DateTime, Enum, Integer, String, Text, ForeignKey
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Enum,
+    Integer,
+    String,
+    Text,
+    ForeignKey,
+)
 from sqlalchemy.orm import relationship
 
 from dataforge.backend.app.models.base import Base, TimestampMixin
@@ -30,7 +39,9 @@ class User(TimestampMixin, Base):
     preferences = Column(Text, nullable=True)
 
     projects = relationship("ProjectMember", back_populates="user", lazy="selectin")
-    api_keys = relationship("APIKey", back_populates="user", cascade="all, delete-orphan", lazy="selectin")
+    api_keys = relationship(
+        "APIKey", back_populates="user", cascade="all, delete-orphan", lazy="selectin"
+    )
     jobs = relationship("Job", back_populates="user", lazy="dynamic")
     usage = relationship("UsageRecord", back_populates="user", lazy="dynamic")
 

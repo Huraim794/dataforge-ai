@@ -61,7 +61,9 @@ class ExtractionError(DataForgeError):
 
 
 class RateLimitError(DataForgeError):
-    def __init__(self, message: str = "Rate limit exceeded", details: Optional[dict] = None):
+    def __init__(
+        self, message: str = "Rate limit exceeded", details: Optional[dict] = None
+    ):
         super().__init__(
             message=message,
             error_code="RATE_LIMIT",
@@ -71,7 +73,9 @@ class RateLimitError(DataForgeError):
 
 
 class CAPTCHAError(DataForgeError):
-    def __init__(self, message: str = "CAPTCHA encountered", details: Optional[dict] = None):
+    def __init__(
+        self, message: str = "CAPTCHA encountered", details: Optional[dict] = None
+    ):
         super().__init__(
             message=message,
             error_code="CAPTCHA_REQUIRED",

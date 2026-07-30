@@ -7,7 +7,6 @@ from sqlalchemy import Column, DateTime, String
 from sqlalchemy.orm import declared_attr
 
 
-
 class TimestampMixin:
     id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
     created_at = Column(

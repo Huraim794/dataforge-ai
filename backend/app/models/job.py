@@ -41,15 +41,23 @@ class JobPriority(int, enum.Enum):
 class Job(TimestampMixin, Base):
     __tablename__ = "jobs"
 
-    project_id = Column(String(36), ForeignKey("projects.id"), nullable=False, index=True)
+    project_id = Column(
+        String(36), ForeignKey("projects.id"), nullable=False, index=True
+    )
     target_id = Column(String(36), ForeignKey("targets.id"), nullable=True, index=True)
     user_id = Column(String(36), ForeignKey("users.id"), nullable=True, index=True)
-    schedule_id = Column(String(36), ForeignKey("schedules.id"), nullable=True, index=True)
+    schedule_id = Column(
+        String(36), ForeignKey("schedules.id"), nullable=True, index=True
+    )
     proxy_id = Column(String(36), ForeignKey("proxies.id"), nullable=True, index=True)
 
     url = Column(Text, nullable=False)
-    status = Column(Enum(JobStatus), default=JobStatus.PENDING, nullable=False, index=True)
-    priority = Column(Integer, default=JobPriority.MEDIUM.value, nullable=False, index=True)
+    status = Column(
+        Enum(JobStatus), default=JobStatus.PENDING, nullable=False, index=True
+    )
+    priority = Column(
+        Integer, default=JobPriority.MEDIUM.value, nullable=False, index=True
+    )
     retry_count = Column(Integer, default=0, nullable=False)
     max_retries = Column(Integer, default=3, nullable=False)
     timeout_ms = Column(Integer, default=30000)
@@ -86,7 +94,19 @@ class Job(TimestampMixin, Base):
     user = relationship("User", back_populates="jobs")
     schedule = relationship("Schedule", back_populates="jobs")
     proxy = relationship("Proxy", back_populates="jobs")
-    runs = relationship("Run", back_populates="job", cascade="all, delete-orphan", lazy="selectin")
-    scrape_results = relationship("ScrapeResult", back_populates="job", cascade="all, delete-orphan", lazy="selectin")
-    extraction_results = relationship("ExtractionResult", back_populates="job", cascade="all, delete-orphan", lazy="selectin")
+    runs = relationship(
+        "Run", back_populates="job", cascade="all, delete-orphan", lazy="selectin"
+    )
+    scrape_results = relationship(
+        "ScrapeResult",
+        back_populates="job",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
+    extraction_results = relationship(
+        "ExtractionResult",
+        back_populates="job",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
     logs = relationship("Log", back_populates="job", lazy="dynamic")

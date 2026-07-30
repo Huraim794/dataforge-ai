@@ -47,6 +47,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
     # Create tables before starting services
     from dataforge.backend.app.core.database import init_models
+
     init_models()
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -142,7 +143,9 @@ app.include_router(api_v1_router, prefix="/api")
 
 
 @app.exception_handler(DataForgeError)
-async def dataforge_error_handler(request: Request, exc: DataForgeError) -> JSONResponse:
+async def dataforge_error_handler(
+    request: Request, exc: DataForgeError
+) -> JSONResponse:
     return JSONResponse(
         status_code=exc.status_code,
         content={
@@ -190,7 +193,9 @@ async def health() -> dict:
         "database": "up" if db_ok else "down",
         "redis": "up" if redis_ok else "down",
         "browser_pool": browser_pool.available_count if browser_pool else 0,
-        "proxy_pool": proxy_manager._pool.__len__() if proxy_manager and hasattr(proxy_manager, '_pool') else 0,
+        "proxy_pool": proxy_manager._pool.__len__()
+        if proxy_manager and hasattr(proxy_manager, "_pool")
+        else 0,
     }
 
 

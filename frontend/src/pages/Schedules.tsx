@@ -5,8 +5,6 @@ import { schedules } from '../services/api'
 export default function Schedules() {
   const [scheduleList, setScheduleList] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [showAdd, setShowAdd] = useState(false)
-  const [form, setForm] = useState({ name: '', url: '', interval: 'daily', project_id: '' })
 
   useEffect(() => {
     loadSchedules()
@@ -50,7 +48,7 @@ export default function Schedules() {
           <h1 className="text-2xl font-bold text-white">Schedules</h1>
           <p className="text-gray-500 mt-1">Automated scraping schedules</p>
         </div>
-        <button onClick={() => setShowAdd(true)} className="btn-primary flex items-center gap-2">
+        <button className="btn-primary flex items-center gap-2 opacity-50 cursor-not-allowed" disabled>
           <Plus className="w-4 h-4" /> Add Schedule
         </button>
       </div>

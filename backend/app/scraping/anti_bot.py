@@ -124,7 +124,9 @@ class AntiBotDetector:
 
             # Check for captcha
             for pattern in self.CAPTCHA_PATTERNS:
-                if re.search(pattern, page_content, re.IGNORECASE) or re.search(pattern, title, re.IGNORECASE):
+                if re.search(pattern, page_content, re.IGNORECASE) or re.search(
+                    pattern, title, re.IGNORECASE
+                ):
                     result.is_captcha = True
                     result.is_bot_detected = True
                     result.confidence = max(result.confidence, 0.8)
@@ -134,7 +136,9 @@ class AntiBotDetector:
 
             # Check for blocks
             for pattern in self.BLOCK_PATTERNS:
-                if re.search(pattern, page_content, re.IGNORECASE) or re.search(pattern, title, re.IGNORECASE):
+                if re.search(pattern, page_content, re.IGNORECASE) or re.search(
+                    pattern, title, re.IGNORECASE
+                ):
                     if "rate limit" in pattern.lower() or "too many" in pattern.lower():
                         result.is_rate_limited = True
                     else:

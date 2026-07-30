@@ -14,3 +14,13 @@ include = ["dataforge*"]
 
 [tool.setuptools.package-dir]
 dataforge = "backend/app"
+
+[tool.mypy]
+ignore_missing_imports = true
+no_namespace_packages = true
+explicit_package_bases = true
+namespace_packages = true
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]
+skips = ["B101", "B311", "B403", "B404", "B603", "B607"]

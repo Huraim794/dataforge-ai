@@ -114,6 +114,7 @@ def require_role(required_role: str):
                 detail=f"Role '{user_role}' insufficient. Required: '{required_role}'",
             )
         return current_user
+
     return role_checker
 
 

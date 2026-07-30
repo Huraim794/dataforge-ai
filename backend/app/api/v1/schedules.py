@@ -7,7 +7,11 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dataforge.backend.app.core.deps import get_current_user, get_db, verify_project_access
+from dataforge.backend.app.core.deps import (
+    get_current_user,
+    get_db,
+    verify_project_access,
+)
 from pydantic import BaseModel
 
 from dataforge.backend.app.models.schedule import Schedule, ScheduleInterval
@@ -84,7 +88,9 @@ async def create_schedule(
     current_user: dict = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
-    await verify_project_access(schedule_data.project_id, current_user["sub"], db, "member")
+    await verify_project_access(
+        schedule_data.project_id, current_user["sub"], db, "member"
+    )
     schedule = Schedule(
         project_id=schedule_data.project_id,
         name=schedule_data.name,
@@ -107,8 +113,10 @@ async def create_schedule(
     await db.refresh(schedule)
 
     from dataforge.backend.app.core.config import settings as app_settings
+
     if app_settings.scheduler_enabled:
         from dataforge.backend.app.main import job_scheduler
+
         if job_scheduler:
             await job_scheduler.add_schedule(schedule)
 
@@ -129,8 +137,14 @@ async def list_schedules(
     if is_active is not None:
         query = query.where(Schedule.is_active == is_active)
 
-    total = (await db.execute(select(func.count()).select_from(query.subquery()))).scalar()
-    query = query.order_by(Schedule.created_at.desc()).offset((page - 1) * page_size).limit(page_size)
+    total = (
+        await db.execute(select(func.count()).select_from(query.subquery()))
+    ).scalar()
+    query = (
+        query.order_by(Schedule.created_at.desc())
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+    )
     result = await db.execute(query)
     items = list(result.scalars().all())
 

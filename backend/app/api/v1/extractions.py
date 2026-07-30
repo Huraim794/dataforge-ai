@@ -8,9 +8,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from pydantic import BaseModel, Field
 
-from dataforge.backend.app.core.deps import get_current_user, get_db, verify_project_access
+from dataforge.backend.app.core.deps import (
+    get_current_user,
+    get_db,
+    verify_project_access,
+)
 from dataforge.backend.app.extraction.ai_extractor import AIExtractor
-from dataforge.backend.app.models.result import ExtractionResult as ExtractionResultModel
+from dataforge.backend.app.models.result import (
+    ExtractionResult as ExtractionResultModel,
+)
 
 router = APIRouter()
 

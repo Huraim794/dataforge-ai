@@ -23,7 +23,9 @@ class Settings(BaseSettings):
     api_host: str = Field(default="0.0.0.0")
     api_port: int = Field(default=8000)
     api_workers: int = Field(default=4)
-    allowed_origins: List[str] = Field(default=["http://localhost:5173", "http://localhost:3000"])
+    allowed_origins: List[str] = Field(
+        default=["http://localhost:5173", "http://localhost:3000"]
+    )
     root_path: str = Field(default="")
 
     database_url: PostgresDsn = Field(
@@ -53,7 +55,9 @@ class Settings(BaseSettings):
     browser_headless: bool = Field(default=True)
     browser_viewport_width: int = 1920
     browser_viewport_height: int = 1080
-    browser_launch_args: List[str] = Field(default=["--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"])
+    browser_launch_args: List[str] = Field(
+        default=["--disable-setuid-sandbox", "--disable-dev-shm-usage", "--disable-gpu"]
+    )
 
     proxy_pool_size: int = Field(default=50)
     proxy_check_interval_seconds: int = Field(default=300)
@@ -120,6 +124,7 @@ class Settings(BaseSettings):
     def check_secret_key(cls, v: str) -> str:
         if not v or v in ("", "dataforge-secret-key-change-in-production"):
             import os
+
             env = os.getenv("ENVIRONMENT", "development")
             if env == "production":
                 raise ValueError(

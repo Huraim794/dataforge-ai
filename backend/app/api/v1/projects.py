@@ -6,10 +6,18 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dataforge.backend.app.core.deps import get_current_user, get_db, verify_project_access
+from dataforge.backend.app.core.deps import (
+    get_current_user,
+    get_db,
+    verify_project_access,
+)
 from pydantic import BaseModel
 
-from dataforge.backend.app.models.project import Project, ProjectMember, ProjectMemberRole
+from dataforge.backend.app.models.project import (
+    Project,
+    ProjectMember,
+    ProjectMemberRole,
+)
 
 router = APIRouter()
 
@@ -78,7 +86,9 @@ async def list_projects(
 ) -> Any:
     user_id = current_user.get("sub")
     result = await db.execute(
-        select(Project).join(ProjectMember).where(
+        select(Project)
+        .join(ProjectMember)
+        .where(
             ProjectMember.user_id == user_id,
             Project.is_active,
         )
@@ -99,7 +109,9 @@ async def get_project(
         raise HTTPException(status_code=404, detail="Project not found")
 
     member_count_result = await db.execute(
-        select(func.count(ProjectMember.id)).where(ProjectMember.project_id == project_id)
+        select(func.count(ProjectMember.id)).where(
+            ProjectMember.project_id == project_id
+        )
     )
 
     return {

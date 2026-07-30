@@ -35,40 +35,48 @@ class CAPTCHAHandler:
         recaptcha_v2 = await page.query_selector(".g-recaptcha")
         if recaptcha_v2:
             sitekey = await recaptcha_v2.get_attribute("data-sitekey")
-            captcha_types.append({
-                "type": "recaptcha_v2",
-                "sitekey": sitekey,
-                "selector": ".g-recaptcha",
-            })
+            captcha_types.append(
+                {
+                    "type": "recaptcha_v2",
+                    "sitekey": sitekey,
+                    "selector": ".g-recaptcha",
+                }
+            )
 
         recaptcha_v3 = await page.query_selector("[data-callback]")
         if recaptcha_v3:
             sitekey = await recaptcha_v3.get_attribute("data-sitekey")
             if not sitekey:
                 sitekey = await recaptcha_v3.get_attribute("data-key")
-            captcha_types.append({
-                "type": "recaptcha_v3",
-                "sitekey": sitekey,
-                "selector": "[data-callback]",
-            })
+            captcha_types.append(
+                {
+                    "type": "recaptcha_v3",
+                    "sitekey": sitekey,
+                    "selector": "[data-callback]",
+                }
+            )
 
         hcaptcha = await page.query_selector(".h-captcha")
         if hcaptcha:
             sitekey = await hcaptcha.get_attribute("data-sitekey")
-            captcha_types.append({
-                "type": "hcaptcha",
-                "sitekey": sitekey,
-                "selector": ".h-captcha",
-            })
+            captcha_types.append(
+                {
+                    "type": "hcaptcha",
+                    "sitekey": sitekey,
+                    "selector": ".h-captcha",
+                }
+            )
 
         turnstile = await page.query_selector(".cf-turnstile")
         if turnstile:
             sitekey = await turnstile.get_attribute("data-sitekey")
-            captcha_types.append({
-                "type": "turnstile",
-                "sitekey": sitekey,
-                "selector": ".cf-turnstile",
-            })
+            captcha_types.append(
+                {
+                    "type": "turnstile",
+                    "sitekey": sitekey,
+                    "selector": ".cf-turnstile",
+                }
+            )
 
         if captcha_types:
             logger.info(f"CAPTCHA detected: {[c['type'] for c in captcha_types]}")

@@ -2,7 +2,17 @@ from __future__ import annotations
 
 import enum
 
-from sqlalchemy import Boolean, Column, DateTime, Enum, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Enum,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+)
 from sqlalchemy.orm import relationship
 
 from dataforge.backend.app.models.base import Base, TimestampMixin
@@ -27,7 +37,9 @@ class ProxyStatus(str, enum.Enum):
 class Proxy(TimestampMixin, Base):
     __tablename__ = "proxies"
 
-    project_id = Column(String(36), ForeignKey("projects.id"), nullable=True, index=True)
+    project_id = Column(
+        String(36), ForeignKey("projects.id"), nullable=True, index=True
+    )
 
     host = Column(String(256), nullable=False, index=True)
     port = Column(Integer, nullable=False)
@@ -35,7 +47,9 @@ class Proxy(TimestampMixin, Base):
     username = Column(String(256), nullable=True)
     password = Column(String(512), nullable=True)
 
-    status = Column(Enum(ProxyStatus), default=ProxyStatus.ACTIVE, nullable=False, index=True)
+    status = Column(
+        Enum(ProxyStatus), default=ProxyStatus.ACTIVE, nullable=False, index=True
+    )
     is_shared = Column(Boolean, default=False)
 
     # Performance metrics

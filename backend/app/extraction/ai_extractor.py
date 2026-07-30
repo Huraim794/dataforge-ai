@@ -62,10 +62,12 @@ Schema: {json.dumps(schema, indent=2)}
 Web Content:
 {content[:100000]}"""
             elif fields:
-                field_descriptions = "\n".join([
-                    f"- {f.get('name', 'field')}: {f.get('description', 'No description')} (type: {f.get('data_type', 'string')}, required: {f.get('required', False)})"
-                    for f in fields
-                ])
+                field_descriptions = "\n".join(
+                    [
+                        f"- {f.get('name', 'field')}: {f.get('description', 'No description')} (type: {f.get('data_type', 'string')}, required: {f.get('required', False)})"
+                        for f in fields
+                    ]
+                )
                 user_prompt = f"""Extract the following fields from the web content:
 {field_descriptions}
 
@@ -125,7 +127,7 @@ Web Content:
                 provider=self.llm.provider,
                 success=result["success"],
                 tokens=result["tokens_used"],
-                cost=llm_response.cost_usd if hasattr(llm_response, 'cost_usd') else 0,
+                cost=llm_response.cost_usd if hasattr(llm_response, "cost_usd") else 0,
             )
 
             logger.info(
@@ -175,7 +177,7 @@ Web Content:
         categories: list[str],
         url: Optional[str] = None,
     ) -> dict[str, Any]:
-        system_prompt = f"""Classify the following web content into one or more of these categories: {', '.join(categories)}
+        system_prompt = f"""Classify the following web content into one or more of these categories: {", ".join(categories)}
 Return a JSON object with:
 - "category": the primary category
 - "subcategories": list of applicable subcategories
@@ -187,7 +189,9 @@ Return a JSON object with:
             {"role": "user", "content": content[:50000]},
         ]
 
-        response = await self.llm.chat(messages=messages, response_format={"type": "json_object"})
+        response = await self.llm.chat(
+            messages=messages, response_format={"type": "json_object"}
+        )
         try:
             return json.loads(response.content)
         except (json.JSONDecodeError, AttributeError):
@@ -206,12 +210,17 @@ Return a JSON object with:
         }
         return await self.extract(content, schema=schema)
 
-    async def extract_table(self, content: str, table_selector: Optional[str] = None) -> dict[str, Any]:
+    async def extract_table(
+        self, content: str, table_selector: Optional[str] = None
+    ) -> dict[str, Any]:
         schema = {
             "type": "object",
             "properties": {
                 "headers": {"type": "array", "items": {"type": "string"}},
-                "rows": {"type": "array", "items": {"type": "array", "items": {"type": "string"}}},
+                "rows": {
+                    "type": "array",
+                    "items": {"type": "array", "items": {"type": "string"}},
+                },
                 "row_count": {"type": "integer"},
                 "column_count": {"type": "integer"},
             },

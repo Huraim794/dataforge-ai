@@ -62,9 +62,7 @@ class JobScheduler:
 
     async def _load_schedules(self) -> None:
         async with async_session_factory() as session:
-            result = await session.execute(
-                select(Schedule).where(Schedule.is_active)
-            )
+            result = await session.execute(select(Schedule).where(Schedule.is_active))
             schedules = list(result.scalars().all())
 
         for schedule in schedules:
@@ -74,7 +72,10 @@ class JobScheduler:
 
     async def _register_schedule(self, schedule: Schedule) -> None:
         try:
-            if schedule.interval == ScheduleInterval.CUSTOM_CRON and schedule.cron_expression:
+            if (
+                schedule.interval == ScheduleInterval.CUSTOM_CRON
+                and schedule.cron_expression
+            ):
                 trigger = CronTrigger.from_crontab(schedule.cron_expression)
             elif schedule.interval.value in INTERVAL_MAP:
                 trigger_cls, kwargs = INTERVAL_MAP[schedule.interval.value]
@@ -125,17 +126,27 @@ class JobScheduler:
                 schedule.is_active = False
                 await session.commit()
                 self.scheduler.remove_job(f"schedule_{schedule_id}")
-                logger.info(f"Schedule {schedule.name} reached max runs, deactivating and removing job")
+                logger.info(
+                    f"Schedule {schedule.name} reached max runs, deactivating and removing job"
+                )
                 return
 
             job_data = {
                 "url": schedule.url,
                 "schedule_id": schedule.id,
                 "headers": schedule.config.get("headers") if schedule.config else None,
-                "javascript_enabled": schedule.config.get("javascript_enabled", True) if schedule.config else True,
-                "wait_for_selector": schedule.config.get("wait_for_selector") if schedule.config else None,
-                "wait_time_ms": schedule.config.get("wait_time_ms", 0) if schedule.config else 0,
-                "screenshot": schedule.config.get("screenshot", False) if schedule.config else False,
+                "javascript_enabled": schedule.config.get("javascript_enabled", True)
+                if schedule.config
+                else True,
+                "wait_for_selector": schedule.config.get("wait_for_selector")
+                if schedule.config
+                else None,
+                "wait_time_ms": schedule.config.get("wait_time_ms", 0)
+                if schedule.config
+                else 0,
+                "screenshot": schedule.config.get("screenshot", False)
+                if schedule.config
+                else False,
                 "max_retries": schedule.max_retries,
                 "tags": schedule.tags,
             }
@@ -145,7 +156,10 @@ class JobScheduler:
             await session.commit()
 
         await self.queue.enqueue(job_data, queue="default")
-        logger.info(f"Schedule {schedule.name} triggered job", extra={"schedule_id": schedule_id})
+        logger.info(
+            f"Schedule {schedule.name} triggered job",
+            extra={"schedule_id": schedule_id},
+        )
 
     async def add_schedule(self, schedule: Schedule) -> None:
         await self._register_schedule(schedule)

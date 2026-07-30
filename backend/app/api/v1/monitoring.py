@@ -50,29 +50,43 @@ async def get_stats(
     last_24h = datetime.now(timezone.utc) - timedelta(hours=24)
 
     total_jobs = (await db.execute(select(func.count(Job.id)))).scalar()
-    active_jobs = (await db.execute(
-        select(func.count(Job.id)).where(
-            Job.status.in_([JobStatus.QUEUED, JobStatus.RUNNING, JobStatus.RETRYING])
+    active_jobs = (
+        await db.execute(
+            select(func.count(Job.id)).where(
+                Job.status.in_(
+                    [JobStatus.QUEUED, JobStatus.RUNNING, JobStatus.RETRYING]
+                )
+            )
         )
-    )).scalar()
-    completed_24h = (await db.execute(
-        select(func.count(Job.id)).where(
-            Job.status == JobStatus.COMPLETED,
-            Job.created_at >= last_24h,
+    ).scalar()
+    completed_24h = (
+        await db.execute(
+            select(func.count(Job.id)).where(
+                Job.status == JobStatus.COMPLETED,
+                Job.created_at >= last_24h,
+            )
         )
-    )).scalar()
-    failed_24h = (await db.execute(
-        select(func.count(Job.id)).where(
-            Job.status == JobStatus.FAILED,
-            Job.created_at >= last_24h,
+    ).scalar()
+    failed_24h = (
+        await db.execute(
+            select(func.count(Job.id)).where(
+                Job.status == JobStatus.FAILED,
+                Job.created_at >= last_24h,
+            )
         )
-    )).scalar()
+    ).scalar()
     total_proxies = (await db.execute(select(func.count(Proxy.id)))).scalar()
-    active_proxies = (await db.execute(
-        select(func.count(Proxy.id)).where(Proxy.status == ProxyStatus.ACTIVE)
-    )).scalar()
+    active_proxies = (
+        await db.execute(
+            select(func.count(Proxy.id)).where(Proxy.status == ProxyStatus.ACTIVE)
+        )
+    ).scalar()
 
-    success_rate = (completed_24h / (completed_24h + failed_24h) * 100) if (completed_24h + failed_24h) > 0 else 0
+    success_rate = (
+        (completed_24h / (completed_24h + failed_24h) * 100)
+        if (completed_24h + failed_24h) > 0
+        else 0
+    )
 
     return {
         "total_jobs": total_jobs or 0,

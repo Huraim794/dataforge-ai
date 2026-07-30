@@ -13,7 +13,9 @@ class ScrapeResult(TimestampMixin, Base):
     job_id = Column(String(36), ForeignKey("jobs.id"), nullable=False, index=True)
     run_id = Column(String(36), ForeignKey("runs.id"), nullable=True, index=True)
     target_id = Column(String(36), ForeignKey("targets.id"), nullable=True, index=True)
-    project_id = Column(String(36), ForeignKey("projects.id"), nullable=True, index=True)
+    project_id = Column(
+        String(36), ForeignKey("projects.id"), nullable=True, index=True
+    )
 
     url = Column(Text, nullable=False)
     title = Column(String(512), nullable=True)
@@ -58,7 +60,12 @@ class ScrapeResult(TimestampMixin, Base):
     run = relationship("Run", lazy="selectin")
     target = relationship("Target", lazy="selectin")
     project = relationship("Project", lazy="selectin")
-    extractions = relationship("ExtractionResult", back_populates="scrape_result", cascade="all, delete-orphan", lazy="selectin")
+    extractions = relationship(
+        "ExtractionResult",
+        back_populates="scrape_result",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
 
 
 class ExtractionResult(TimestampMixin, Base):
@@ -66,9 +73,13 @@ class ExtractionResult(TimestampMixin, Base):
 
     job_id = Column(String(36), ForeignKey("jobs.id"), nullable=False, index=True)
     run_id = Column(String(36), ForeignKey("runs.id"), nullable=True, index=True)
-    scrape_result_id = Column(String(36), ForeignKey("scrape_results.id"), nullable=True, index=True)
+    scrape_result_id = Column(
+        String(36), ForeignKey("scrape_results.id"), nullable=True, index=True
+    )
     target_id = Column(String(36), ForeignKey("targets.id"), nullable=True, index=True)
-    project_id = Column(String(36), ForeignKey("projects.id"), nullable=True, index=True)
+    project_id = Column(
+        String(36), ForeignKey("projects.id"), nullable=True, index=True
+    )
 
     # Extraction data
     extracted_data = Column(JSON, nullable=True)

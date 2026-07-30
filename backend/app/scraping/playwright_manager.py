@@ -3,7 +3,13 @@ from __future__ import annotations
 import time
 from typing import Any, Optional
 
-from playwright.async_api import Browser, BrowserContext, Page, Playwright, async_playwright
+from playwright.async_api import (
+    Browser,
+    BrowserContext,
+    Page,
+    Playwright,
+    async_playwright,
+)
 
 from dataforge.backend.app.core.config import settings
 from dataforge.backend.app.monitoring.logger import get_logger
@@ -68,7 +74,8 @@ class PlaywrightManager:
 
         context_options: dict[str, Any] = {
             "user_agent": user_agent or settings.default_user_agent,
-            "viewport": viewport or {
+            "viewport": viewport
+            or {
                 "width": settings.browser_viewport_width,
                 "height": settings.browser_viewport_height,
             },
@@ -127,7 +134,9 @@ class PlaywrightManager:
             return metrics
 
         except Exception as e:
-            logger.error(f"Navigation failed for {url}", extra={"error": str(e), "url": url})
+            logger.error(
+                f"Navigation failed for {url}", extra={"error": str(e), "url": url}
+            )
             raise
 
     async def close(self) -> None:

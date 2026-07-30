@@ -7,7 +7,12 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dataforge.backend.app.core.deps import get_current_user, get_db, require_role, verify_project_access
+from dataforge.backend.app.core.deps import (
+    get_current_user,
+    get_db,
+    require_role,
+    verify_project_access,
+)
 from dataforge.backend.app.models.proxy import Proxy, ProxyProtocol, ProxyStatus
 from pydantic import BaseModel, Field
 
@@ -82,7 +87,9 @@ async def create_proxy(
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     if proxy_data.project_id:
-        await verify_project_access(proxy_data.project_id, current_user["sub"], db, "member")
+        await verify_project_access(
+            proxy_data.project_id, current_user["sub"], db, "member"
+        )
     proxy = Proxy(
         host=proxy_data.host,
         port=proxy_data.port,
@@ -126,8 +133,14 @@ async def list_proxies(
     if country:
         query = query.where(Proxy.country == country)
 
-    total = (await db.execute(select(func.count()).select_from(query.subquery()))).scalar()
-    query = query.order_by(Proxy.score.desc()).offset((page - 1) * page_size).limit(page_size)
+    total = (
+        await db.execute(select(func.count()).select_from(query.subquery()))
+    ).scalar()
+    query = (
+        query.order_by(Proxy.score.desc())
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+    )
     result = await db.execute(query)
     items = list(result.scalars().all())
 
@@ -215,7 +228,9 @@ async def check_all_proxies(
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     result = await db.execute(
-        select(Proxy).where(Proxy.status.in_([ProxyStatus.ACTIVE, ProxyStatus.INACTIVE]))
+        select(Proxy).where(
+            Proxy.status.in_([ProxyStatus.ACTIVE, ProxyStatus.INACTIVE])
+        )
     )
     proxies = list(result.scalars().all())
 

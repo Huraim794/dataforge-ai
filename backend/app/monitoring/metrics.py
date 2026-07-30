@@ -17,7 +17,9 @@ from dataforge.backend.app.core.config import settings
 class MetricsCollector:
     def __init__(self) -> None:
         self.info = Info("dataforge", "DataForge AI Platform")
-        self.info.info({"version": settings.version, "environment": settings.environment})
+        self.info.info(
+            {"version": settings.version, "environment": settings.environment}
+        )
 
         self.jobs_total = Counter(
             "dataforge_jobs_total",
@@ -121,20 +123,27 @@ class MetricsCollector:
     def collect_system_metrics(self) -> None:
         try:
             import psutil
+
             self.cpu_usage.set(psutil.cpu_percent(interval=0.1))
             self.memory_usage.set(psutil.virtual_memory().used)
         except ImportError:
             pass
 
-    def observe_job(self, status: str, duration_ms: float, project_id: str = "unknown") -> None:
+    def observe_job(
+        self, status: str, duration_ms: float, project_id: str = "unknown"
+    ) -> None:
         self.jobs_total.labels(status=status, project_id=project_id).inc()
-        self.jobs_duration.labels(status=status, project_id=project_id).observe(duration_ms / 1000)
+        self.jobs_duration.labels(status=status, project_id=project_id).observe(
+            duration_ms / 1000
+        )
 
     def observe_scrape(self, status: str, duration_ms: float) -> None:
         self.scrapes_total.labels(status=status, project_id="unknown").inc()
         self.scrape_duration.labels(status=status).observe(duration_ms / 1000)
 
-    def observe_extraction(self, provider: str, success: bool, tokens: int, cost: float) -> None:
+    def observe_extraction(
+        self, provider: str, success: bool, tokens: int, cost: float
+    ) -> None:
         self.extractions_total.labels(provider=provider, success=str(success)).inc()
         self.extraction_tokens.labels(provider=provider, model="").inc(tokens)
         self.extraction_cost.labels(provider=provider).inc(cost)

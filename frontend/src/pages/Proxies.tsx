@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, RefreshCw, Globe, CheckCircle2, XCircle } from 'lucide-react'
+import { Plus, RefreshCw, Globe } from 'lucide-react'
 import { proxies } from '../services/api'
 
 export default function Proxies() {

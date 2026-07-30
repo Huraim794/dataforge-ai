@@ -10,7 +10,6 @@ import {
   LogOut,
   Menu,
   X,
-  ChevronDown,
   Activity,
   Users,
 } from 'lucide-react'

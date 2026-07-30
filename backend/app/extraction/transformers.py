@@ -41,31 +41,37 @@ class DataTransformer:
     @staticmethod
     def clean_html_content(html: str) -> str:
         import re
+
         # Remove scripts and styles
-        html = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.DOTALL)
-        html = re.sub(r'<style[^>]*>.*?</style>', '', html, flags=re.DOTALL)
+        html = re.sub(r"<script[^>]*>.*?</script>", "", html, flags=re.DOTALL)
+        html = re.sub(r"<style[^>]*>.*?</style>", "", html, flags=re.DOTALL)
         # Remove HTML tags
-        text = re.sub(r'<[^>]+>', ' ', html)
+        text = re.sub(r"<[^>]+>", " ", html)
         # Remove excessive whitespace
-        text = re.sub(r'\s+', ' ', text)
+        text = re.sub(r"\s+", " ", text)
         # Remove empty lines
-        text = re.sub(r'\n\s*\n', '\n', text)
+        text = re.sub(r"\n\s*\n", "\n", text)
         return text.strip()
 
     @staticmethod
     def extract_urls(text: str) -> list[str]:
         import re
-        url_pattern = r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+[-\w./?%&=+#]*'
+
+        url_pattern = r"https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+[-\w./?%&=+#]*"
         return list(set(re.findall(url_pattern, text)))
 
     @staticmethod
     def extract_emails(text: str) -> list[str]:
         import re
-        email_pattern = r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+
+        email_pattern = r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
         return list(set(re.findall(email_pattern, text)))
 
     @staticmethod
     def truncate_text(text: str, max_chars: int = 100000) -> str:
         if len(text) <= max_chars:
             return text
-        return text[:max_chars] + f"\n\n[... truncated, {len(text) - max_chars} chars removed]"
+        return (
+            text[:max_chars]
+            + f"\n\n[... truncated, {len(text) - max_chars} chars removed]"
+        )

@@ -11,7 +11,9 @@ class UsageRecord(TimestampMixin, Base):
     __tablename__ = "usage_records"
 
     user_id = Column(String(36), ForeignKey("users.id"), nullable=False, index=True)
-    project_id = Column(String(36), ForeignKey("projects.id"), nullable=True, index=True)
+    project_id = Column(
+        String(36), ForeignKey("projects.id"), nullable=True, index=True
+    )
 
     action = Column(String(128), nullable=False, index=True)
     resource_type = Column(String(64), nullable=True)

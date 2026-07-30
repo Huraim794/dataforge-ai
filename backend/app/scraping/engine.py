@@ -87,7 +87,9 @@ class ScrapingEngine:
                     page = await browser_instance.context.new_page()
 
                     if javascript_enabled:
-                        await page.add_init_script(self.anti_bot.generate_evasion_script())
+                        await page.add_init_script(
+                            self.anti_bot.generate_evasion_script()
+                        )
 
                     if headers:
                         await page.set_extra_http_headers(headers)
@@ -102,7 +104,9 @@ class ScrapingEngine:
                     await asyncio.sleep(AntiBotDetector.get_random_delay(1000, 3000))
 
                     timeout = timeout_ms or settings.default_timeout_ms
-                    response = await page.goto(url, timeout=timeout, wait_until="networkidle")
+                    response = await page.goto(
+                        url, timeout=timeout, wait_until="networkidle"
+                    )
 
                     if response:
                         result["status_code"] = response.status
@@ -115,15 +119,21 @@ class ScrapingEngine:
 
                     bot_check = self.anti_bot.check_page(page)
                     result["captcha_detected"] = bot_check.is_captcha
-                    result["blocked_detected"] = bot_check.is_blocked or bot_check.is_cloudflare
+                    result["blocked_detected"] = (
+                        bot_check.is_blocked or bot_check.is_cloudflare
+                    )
                     result["bot_score"] = int(bot_check.confidence * 100)
 
                     if bot_check.is_captcha and self.captcha_handler.auto_solve:
                         captcha_info = await self.captcha_handler.detect_captcha(page)
                         if captcha_info:
-                            await self.captcha_handler.solve_captcha(page, captcha_info, url)
+                            await self.captcha_handler.solve_captcha(
+                                page, captcha_info, url
+                            )
 
-                    if (bot_check.is_blocked or bot_check.is_cloudflare) and attempt < max_retries - 1:
+                    if (
+                        bot_check.is_blocked or bot_check.is_cloudflare
+                    ) and attempt < max_retries - 1:
                         logger.warning(
                             f"Blocked on {url}, retrying with different proxy",
                             extra={"attempt": attempt, "url": url},
@@ -148,9 +158,15 @@ class ScrapingEngine:
                     }""")
 
                     if screenshot:
-                        screenshot_bytes = await page.screenshot(full_page=True, type="png")
-                        screenshot_hash = hashlib.sha256(screenshot_bytes).hexdigest()[:16]
-                        screenshots_dir = Path(settings.storage_local_path) / "screenshots"
+                        screenshot_bytes = await page.screenshot(
+                            full_page=True, type="png"
+                        )
+                        screenshot_hash = hashlib.sha256(screenshot_bytes).hexdigest()[
+                            :16
+                        ]
+                        screenshots_dir = (
+                            Path(settings.storage_local_path) / "screenshots"
+                        )
                         screenshots_dir.mkdir(parents=True, exist_ok=True)
                         screenshot_path = screenshots_dir / f"{screenshot_hash}.png"
                         screenshot_path.write_bytes(screenshot_bytes)
@@ -206,13 +222,20 @@ class ScrapingEngine:
 
                 finally:
                     if browser_instance:
-                        await self.browser_pool.release(browser_instance, healthy=result["success"])
+                        await self.browser_pool.release(
+                            browser_instance, healthy=result["success"]
+                        )
 
             except Exception as e:
                 error_type = type(e).__name__
                 logger.error(
                     f"Scrape attempt {attempt + 1} failed for {url}",
-                    extra={"error": str(e), "error_type": error_type, "attempt": attempt, "url": url},
+                    extra={
+                        "error": str(e),
+                        "error_type": error_type,
+                        "attempt": attempt,
+                        "url": url,
+                    },
                 )
                 if current_proxy_id:
                     await self.proxy_manager.report_failure(current_proxy_id)
@@ -220,7 +243,9 @@ class ScrapingEngine:
                     current_proxy_id = None
 
                 if attempt < max_retries - 1:
-                    wait = settings.queue_retry_delay_seconds * (settings.queue_retry_backoff_multiplier ** attempt)
+                    wait = settings.queue_retry_delay_seconds * (
+                        settings.queue_retry_backoff_multiplier**attempt
+                    )
                     await asyncio.sleep(wait)
                 else:
                     result["error"] = str(e)

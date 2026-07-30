@@ -21,7 +21,9 @@ class TargetType(str, enum.Enum):
 class Target(TimestampMixin, Base):
     __tablename__ = "targets"
 
-    project_id = Column(String(36), ForeignKey("projects.id"), nullable=False, index=True)
+    project_id = Column(
+        String(36), ForeignKey("projects.id"), nullable=False, index=True
+    )
     name = Column(String(255), nullable=False)
     url = Column(Text, nullable=False)
     target_type = Column(Enum(TargetType), default=TargetType.WEBPAGE, nullable=False)

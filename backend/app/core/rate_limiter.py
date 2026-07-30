@@ -10,7 +10,9 @@ from dataforge.backend.app.core.redis import get_cache_redis
 
 
 class RateLimiter:
-    def __init__(self, requests_per_second: int, burst_size: int, window_seconds: int = 1):
+    def __init__(
+        self, requests_per_second: int, burst_size: int, window_seconds: int = 1
+    ):
         self.requests_per_second = requests_per_second
         self.burst_size = burst_size
         self.window_seconds = window_seconds

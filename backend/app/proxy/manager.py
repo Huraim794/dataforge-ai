@@ -56,6 +56,7 @@ class ProxyManager:
                 proxy = self.rotator.get_weighted()
             else:
                 import random
+
                 proxy = random.choice(usable)
 
             proxy_id = proxy.get("id")
@@ -76,9 +77,7 @@ class ProxyManager:
 
     async def report_failure(self, proxy_id: str) -> None:
         async with async_session_factory() as session:
-            result = await session.execute(
-                select(Proxy).where(Proxy.id == proxy_id)
-            )
+            result = await session.execute(select(Proxy).where(Proxy.id == proxy_id))
             proxy = result.scalar_one_or_none()
             if proxy:
                 proxy.failure_count += 1
@@ -94,9 +93,7 @@ class ProxyManager:
 
     async def report_success(self, proxy_id: str) -> None:
         async with async_session_factory() as session:
-            result = await session.execute(
-                select(Proxy).where(Proxy.id == proxy_id)
-            )
+            result = await session.execute(select(Proxy).where(Proxy.id == proxy_id))
             proxy = result.scalar_one_or_none()
             if proxy:
                 proxy.success_count += 1
@@ -117,9 +114,7 @@ class ProxyManager:
 
     async def remove_proxy(self, proxy_id: str) -> bool:
         async with async_session_factory() as session:
-            result = await session.execute(
-                select(Proxy).where(Proxy.id == proxy_id)
-            )
+            result = await session.execute(select(Proxy).where(Proxy.id == proxy_id))
             proxy = result.scalar_one_or_none()
             if proxy:
                 await session.delete(proxy)
@@ -130,9 +125,7 @@ class ProxyManager:
 
     async def get_all_proxies(self) -> list[Proxy]:
         async with async_session_factory() as session:
-            result = await session.execute(
-                select(Proxy).order_by(Proxy.score.desc())
-            )
+            result = await session.execute(select(Proxy).order_by(Proxy.score.desc()))
             return list(result.scalars().all())
 
     async def _load_proxies(self) -> None:

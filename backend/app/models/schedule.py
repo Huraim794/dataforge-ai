@@ -2,7 +2,17 @@ from __future__ import annotations
 
 import enum
 
-from sqlalchemy import Boolean, Column, DateTime, Enum, ForeignKey, Integer, JSON, String, Text
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Integer,
+    JSON,
+    String,
+    Text,
+)
 from sqlalchemy.orm import relationship
 
 from dataforge.backend.app.models.base import Base, TimestampMixin
@@ -29,13 +39,17 @@ class ScheduleInterval(str, enum.Enum):
 class Schedule(TimestampMixin, Base):
     __tablename__ = "schedules"
 
-    project_id = Column(String(36), ForeignKey("projects.id"), nullable=False, index=True)
+    project_id = Column(
+        String(36), ForeignKey("projects.id"), nullable=False, index=True
+    )
     target_id = Column(String(36), ForeignKey("targets.id"), nullable=True, index=True)
     created_by = Column(String(36), ForeignKey("users.id"), nullable=True)
 
     name = Column(String(255), nullable=False)
     description = Column(Text, nullable=True)
-    interval = Column(Enum(ScheduleInterval), default=ScheduleInterval.DAILY, nullable=False)
+    interval = Column(
+        Enum(ScheduleInterval), default=ScheduleInterval.DAILY, nullable=False
+    )
     cron_expression = Column(String(100), nullable=True)
 
     url = Column(Text, nullable=False)

@@ -63,7 +63,10 @@ class QueueManager:
             await self._redis.lpush(queue_key, serialized)
 
         metrics_collector.queue_depth.labels(queue=queue).inc()
-        logger.info(f"Enqueued job {job_id} to {queue}", extra={"job_id": job_id, "queue": queue})
+        logger.info(
+            f"Enqueued job {job_id} to {queue}",
+            extra={"job_id": job_id, "queue": queue},
+        )
         return job_id
 
     async def dequeue(
@@ -112,7 +115,10 @@ class QueueManager:
             return
 
         payload["retry_count"] = retry_count
-        delay = delay_seconds or (settings.queue_retry_delay_seconds * (settings.queue_retry_backoff_multiplier ** (retry_count - 1)))
+        delay = delay_seconds or (
+            settings.queue_retry_delay_seconds
+            * (settings.queue_retry_backoff_multiplier ** (retry_count - 1))
+        )
         payload["next_retry_at"] = time.time() + delay
 
         await self.enqueue(

@@ -21,7 +21,9 @@ class Log(TimestampMixin, Base):
 
     job_id = Column(String(36), ForeignKey("jobs.id"), nullable=True, index=True)
     run_id = Column(String(36), ForeignKey("runs.id"), nullable=True, index=True)
-    project_id = Column(String(36), ForeignKey("projects.id"), nullable=True, index=True)
+    project_id = Column(
+        String(36), ForeignKey("projects.id"), nullable=True, index=True
+    )
 
     level = Column(Enum(LogLevel), default=LogLevel.INFO, nullable=False, index=True)
     source = Column(String(128), nullable=True, index=True)

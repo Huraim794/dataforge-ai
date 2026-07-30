@@ -32,7 +32,7 @@ export default function Extractions() {
           res = await extractions.extractContacts(content)
           break
         case 'table':
-          res = await extractions.extractTable(content)
+          res = await extractions.extract({ content, schema: { type: 'object' } })
           break
       }
       setResult(res)

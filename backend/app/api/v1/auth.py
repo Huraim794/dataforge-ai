@@ -222,9 +222,7 @@ async def list_api_keys(
     db: AsyncSession = Depends(get_db),
 ) -> Any:
     user_id = current_user.get("sub")
-    result = await db.execute(
-        select(APIKey).where(APIKey.user_id == user_id)
-    )
+    result = await db.execute(select(APIKey).where(APIKey.user_id == user_id))
     return list(result.scalars().all())
 
 

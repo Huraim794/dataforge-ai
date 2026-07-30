@@ -7,7 +7,11 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dataforge.backend.app.core.deps import get_current_user, get_db, verify_project_access
+from dataforge.backend.app.core.deps import (
+    get_current_user,
+    get_db,
+    verify_project_access,
+)
 from dataforge.backend.app.models.job import Job, JobStatus
 from dataforge.backend.app.models.project import ProjectMember
 from dataforge.backend.app.models.run import Run
@@ -150,8 +154,14 @@ async def list_jobs(
     if status:
         query = query.where(Job.status == status)
 
-    total = (await db.execute(select(func.count()).select_from(query.subquery()))).scalar()
-    query = query.order_by(Job.created_at.desc()).offset((page - 1) * page_size).limit(page_size)
+    total = (
+        await db.execute(select(func.count()).select_from(query.subquery()))
+    ).scalar()
+    query = (
+        query.order_by(Job.created_at.desc())
+        .offset((page - 1) * page_size)
+        .limit(page_size)
+    )
     result = await db.execute(query)
     items = list(result.scalars().all())
 
@@ -182,10 +192,14 @@ async def get_job(
         select(Run).where(Run.job_id == job_id).order_by(Run.created_at.desc())
     )
     scraps_result = await db.execute(
-        select(ScrapeResult).where(ScrapeResult.job_id == job_id).order_by(ScrapeResult.created_at.desc())
+        select(ScrapeResult)
+        .where(ScrapeResult.job_id == job_id)
+        .order_by(ScrapeResult.created_at.desc())
     )
     extractions_result = await db.execute(
-        select(ExtractionResult).where(ExtractionResult.job_id == job_id).order_by(ExtractionResult.created_at.desc())
+        select(ExtractionResult)
+        .where(ExtractionResult.job_id == job_id)
+        .order_by(ExtractionResult.created_at.desc())
     )
 
     job_dict = {
@@ -209,7 +223,9 @@ async def cancel_job(
         raise HTTPException(status_code=404, detail="Job not found")
     await verify_project_access(job.project_id, current_user["sub"], db, "member")
     if job.status in (JobStatus.COMPLETED, JobStatus.CANCELLED, JobStatus.FAILED):
-        raise HTTPException(status_code=400, detail=f"Job already in {job.status} state")
+        raise HTTPException(
+            status_code=400, detail=f"Job already in {job.status} state"
+        )
 
     job.status = JobStatus.CANCELLED
     job.completed_at = datetime.now(timezone.utc)

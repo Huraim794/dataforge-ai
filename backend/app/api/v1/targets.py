@@ -6,7 +6,11 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dataforge.backend.app.core.deps import get_current_user, get_db, verify_project_access
+from dataforge.backend.app.core.deps import (
+    get_current_user,
+    get_db,
+    verify_project_access,
+)
 from pydantic import BaseModel
 
 from dataforge.backend.app.models.target import Target, TargetType
@@ -74,7 +78,9 @@ async def create_target(
     current_user: dict = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> Any:
-    await verify_project_access(target_data.project_id, current_user["sub"], db, "member")
+    await verify_project_access(
+        target_data.project_id, current_user["sub"], db, "member"
+    )
     target = Target(
         project_id=target_data.project_id,
         name=target_data.name,

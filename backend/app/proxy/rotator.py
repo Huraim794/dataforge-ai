@@ -45,7 +45,9 @@ class ProxyRotator:
         return self._proxies[-1]
 
     def get_by_country(self, country: str) -> Optional[dict[str, Any]]:
-        matches = [p for p in self._proxies if p.get("country", "").lower() == country.lower()]
+        matches = [
+            p for p in self._proxies if p.get("country", "").lower() == country.lower()
+        ]
         return random.choice(matches) if matches else None
 
     def update_proxies(self, proxies: list[dict[str, Any]]) -> None:

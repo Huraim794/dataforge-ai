@@ -46,9 +46,7 @@ class JsonFormatter(logging.Formatter):
             log_entry["exception"] = {
                 "type": record.exc_info[0].__name__,
                 "message": str(record.exc_info[1]),
-                "traceback": "".join(
-                    traceback.format_exception(*record.exc_info)
-                ),
+                "traceback": "".join(traceback.format_exception(*record.exc_info)),
             }
         # Collect any extra fields from the record
         extra = getattr(record, "extra", None)

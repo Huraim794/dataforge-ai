@@ -30,7 +30,9 @@ class Run(TimestampMixin, Base):
     attempt_number = Column(Integer, default=1, nullable=False)
 
     url = Column(Text, nullable=False)
-    status = Column(Enum(RunStatus), default=RunStatus.QUEUED, nullable=False, index=True)
+    status = Column(
+        Enum(RunStatus), default=RunStatus.QUEUED, nullable=False, index=True
+    )
 
     # Browser
     browser_type = Column(String(50), default="chromium")
@@ -69,5 +71,7 @@ class Run(TimestampMixin, Base):
     queue_time_ms = Column(Integer, nullable=True)
 
     job = relationship("Job", back_populates="runs")
-    pages = relationship("Page", back_populates="run", cascade="all, delete-orphan", lazy="selectin")
+    pages = relationship(
+        "Page", back_populates="run", cascade="all, delete-orphan", lazy="selectin"
+    )
     proxy = relationship("Proxy", lazy="selectin")
