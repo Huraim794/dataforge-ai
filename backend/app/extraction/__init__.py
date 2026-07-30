@@ -1,6 +1,6 @@
-from dataforge.backend.app.extraction.ai_extractor import AIExtractor
-from dataforge.backend.app.extraction.llm_client import LLMClient
-from dataforge.backend.app.extraction.transformers import DataTransformer
+from app.extraction.ai_extractor import AIExtractor
+from app.extraction.llm_client import LLMClient
+from app.extraction.transformers import DataTransformer
 
 __all__ = [
     "AIExtractor",

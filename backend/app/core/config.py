@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     debug: bool = False
     environment: str = Field(default="production")
 
-    api_host: str = Field(default="0.0.0.0")
+    api_host: str = Field(default="0.0.0.0")  # nosec - required for container binding
     api_port: int = Field(default=8000)
     api_workers: int = Field(default=4)
     allowed_origins: List[str] = Field(
@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     )
     root_path: str = Field(default="")
 
-    database_url: PostgresDsn = Field(
+    database_url: str = Field(
         default="postgresql+asyncpg://dataforge:dataforge@localhost:5432/dataforge"
     )
     database_sync_url: str = Field(
@@ -37,9 +37,9 @@ class Settings(BaseSettings):
     database_pool_size: int = Field(default=20)
     database_max_overflow: int = Field(default=10)
 
-    redis_url: RedisDsn = Field(default="redis://localhost:6379/0")
-    redis_queue_url: RedisDsn = Field(default="redis://localhost:6379/1")
-    redis_cache_url: RedisDsn = Field(default="redis://localhost:6379/2")
+    redis_url: str = Field(default="redis://localhost:6379/0")
+    redis_queue_url: str = Field(default="redis://localhost:6379/1")
+    redis_cache_url: str = Field(default="redis://localhost:6379/2")
 
     secret_key: str = Field(default="")
     access_token_expire_minutes: int = Field(default=30)

@@ -3,6 +3,7 @@
 Run: python -m backend.worker
 Or:  python backend/worker.py
 """
+
 import asyncio
 import os
 import sys
@@ -10,15 +11,15 @@ import sys
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from dataforge.backend.app.core.config import settings
-from dataforge.backend.app.core.database import engine, Base, init_models
-from dataforge.backend.app.monitoring.logger import get_logger
-from dataforge.backend.app.proxy.manager import ProxyManager
-from dataforge.backend.app.scraping.browser_pool import BrowserPool
-from dataforge.backend.app.scraping.captcha import CAPTCHAHandler
-from dataforge.backend.app.scraping.engine import ScrapingEngine
-from dataforge.backend.app.worker.queue import QueueManager
-from dataforge.backend.app.worker.tasks import TaskProcessor
+from app.core.config import settings
+from app.core.database import engine, Base, init_models
+from app.monitoring.logger import get_logger
+from app.proxy.manager import ProxyManager
+from app.scraping.browser_pool import BrowserPool
+from app.scraping.captcha import CAPTCHAHandler
+from app.scraping.engine import ScrapingEngine
+from app.worker.queue import QueueManager
+from app.worker.tasks import TaskProcessor
 
 logger = get_logger(__name__)
 

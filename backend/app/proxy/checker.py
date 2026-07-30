@@ -7,8 +7,8 @@ from typing import Any, Optional
 
 import httpx
 
-from dataforge.backend.app.core.config import settings
-from dataforge.backend.app.monitoring.logger import get_logger
+from app.core.config import settings
+from app.monitoring.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -44,9 +44,9 @@ class ProxyChecker:
 
         try:
             async with httpx.AsyncClient(
-                proxies=proxy_str,
+                proxies=proxy_str,  # type: ignore[call-arg]
                 timeout=self.timeout,
-                verify=False,
+                verify=False,  # nosec - intentional for proxy connectivity checks
             ) as client:
                 response = await client.get(self.check_url)
                 elapsed = (time.time() - start) * 1000

@@ -11,7 +11,7 @@ from prometheus_client import (
     Info,
 )
 
-from dataforge.backend.app.core.config import settings
+from app.core.config import settings
 
 
 class MetricsCollector:

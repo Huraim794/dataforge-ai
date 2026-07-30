@@ -6,13 +6,13 @@ from typing import Any, Optional
 
 from sqlalchemy import select, update
 
-from dataforge.backend.app.core.config import settings
-from dataforge.backend.app.core.database import async_session_factory
-from dataforge.backend.app.models.proxy import Proxy, ProxyStatus
-from dataforge.backend.app.monitoring.logger import get_logger
-from dataforge.backend.app.monitoring.metrics import metrics_collector
-from dataforge.backend.app.proxy.checker import ProxyChecker
-from dataforge.backend.app.proxy.rotator import ProxyRotator
+from app.core.config import settings
+from app.core.database import async_session_factory
+from app.models.proxy import Proxy, ProxyStatus
+from app.monitoring.logger import get_logger
+from app.monitoring.metrics import metrics_collector
+from app.proxy.checker import ProxyChecker
+from app.proxy.rotator import ProxyRotator
 
 logger = get_logger(__name__)
 

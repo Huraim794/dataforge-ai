@@ -1,4 +1,4 @@
-from dataforge.backend.app.extraction.transformers import DataTransformer
+from app.extraction.transformers import DataTransformer
 
 
 class TestDataTransformer:

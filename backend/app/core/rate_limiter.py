@@ -5,8 +5,8 @@ from typing import Optional
 
 from fastapi import HTTPException, Request, status
 
-from dataforge.backend.app.core.config import settings
-from dataforge.backend.app.core.redis import get_cache_redis
+from app.core.config import settings
+from app.core.redis import get_cache_redis
 
 
 class RateLimiter:
@@ -41,7 +41,7 @@ class RateLimiter:
             await redis.expire(key, self.window_seconds * 2)
         except HTTPException:
             raise
-        except Exception:
+        except Exception:  # nosec - redis unavailable degrades gracefully
             pass
 
     def _get_client_key(self, request: Request) -> Optional[str]:

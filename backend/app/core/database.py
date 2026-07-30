@@ -11,7 +11,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.orm import declarative_base
 
-from dataforge.backend.app.core.config import settings
+from app.core.config import settings
 
 engine = create_async_engine(
     settings.database_url_str,
@@ -33,7 +33,7 @@ Base = declarative_base()
 
 def init_models() -> None:
     """Import all models so they register on Base.metadata."""
-    import dataforge.backend.app.models  # noqa: F401
+    import app.models  # noqa: F401
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:

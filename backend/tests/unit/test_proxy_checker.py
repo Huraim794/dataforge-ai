@@ -1,5 +1,5 @@
 import pytest
-from dataforge.backend.app.proxy.checker import ProxyChecker
+from app.proxy.checker import ProxyChecker
 
 
 class TestProxyChecker:

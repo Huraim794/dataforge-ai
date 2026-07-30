@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 
 from playwright.async_api import Page
 
-from dataforge.backend.app.monitoring.logger import get_logger
+from app.monitoring.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -117,7 +117,7 @@ class AntiBotDetector:
 
             try:
                 await page.evaluate("() => document.readyState")
-            except Exception:
+            except Exception:  # nosec - best-effort eval
                 pass
 
             title = await page.title()

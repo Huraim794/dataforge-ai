@@ -5,19 +5,20 @@ import logging
 import sys
 import traceback
 from datetime import datetime, timezone
+from collections.abc import MutableMapping
 from typing import Any, Optional
 from uuid import uuid4
 
-from dataforge.backend.app.core.config import settings
+from app.core.config import settings
 
 
 class ContextAdapter(logging.LoggerAdapter):
     """LoggerAdapter that preserves per-call extra kwargs alongside adapter-level context."""
 
-    def process(self, msg: str, kwargs: dict) -> tuple[str, dict]:
+    def process(self, msg: str, kwargs: MutableMapping[str, Any]) -> tuple[str, Any]:
         extra = kwargs.get("extra", {})
         if isinstance(extra, dict):
-            merged = dict(self.extra)
+            merged = dict(self.extra or {})
             merged.update(extra)
             kwargs["extra"] = merged
         return msg, kwargs
@@ -90,4 +91,4 @@ class LogManager:
 
     def set_correlation_id(self, name: str, correlation_id: str) -> None:
         logger = self.get_logger(name)
-        logger.extra["correlation_id"] = correlation_id
+        logger.extra = {**(logger.extra or {}), "correlation_id": correlation_id}

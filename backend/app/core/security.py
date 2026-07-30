@@ -7,7 +7,7 @@ from typing import Any, Dict, Optional
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
-from dataforge.backend.app.core.config import settings
+from app.core.config import settings
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -83,7 +83,7 @@ def verify_refresh_token(token: str) -> Optional[Dict[str, Any]]:
 
 def verify_api_key_sync(raw_key: str, db_session) -> Optional[str]:
     """Synchronous version for use inside async contexts where session is available."""
-    from dataforge.backend.app.models.user import APIKey
+    from app.models.user import APIKey
     from sqlalchemy import select
 
     key_hash = hash_api_key(raw_key)

@@ -11,8 +11,8 @@ from playwright.async_api import (
     async_playwright,
 )
 
-from dataforge.backend.app.core.config import settings
-from dataforge.backend.app.monitoring.logger import get_logger
+from app.core.config import settings
+from app.monitoring.logger import get_logger
 
 logger = get_logger(__name__)
 

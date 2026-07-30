@@ -6,10 +6,10 @@ from typing import Any, Optional
 
 from redis.asyncio import Redis
 
-from dataforge.backend.app.core.config import settings
-from dataforge.backend.app.core.redis import get_queue_redis
-from dataforge.backend.app.monitoring.logger import get_logger
-from dataforge.backend.app.monitoring.metrics import metrics_collector
+from app.core.config import settings
+from app.core.redis import get_queue_redis
+from app.monitoring.logger import get_logger
+from app.monitoring.metrics import metrics_collector
 
 logger = get_logger(__name__)
 
@@ -55,6 +55,7 @@ class QueueManager:
 
         serialized = json.dumps(payload)
 
+        assert self._redis is not None
         if delay_seconds > 0:
             queue_key = self.QUEUES["scheduled"]
             await self._redis.zadd(queue_key, {serialized: time.time() + delay_seconds})

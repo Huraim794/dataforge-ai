@@ -7,9 +7,9 @@ from typing import Any, Optional
 
 from playwright.async_api import Browser, BrowserContext, Playwright, async_playwright
 
-from dataforge.backend.app.core.config import settings
-from dataforge.backend.app.monitoring.logger import get_logger
-from dataforge.backend.app.monitoring.metrics import metrics_collector
+from app.core.config import settings
+from app.monitoring.logger import get_logger
+from app.monitoring.metrics import metrics_collector
 
 logger = get_logger(__name__)
 
@@ -216,7 +216,7 @@ class BrowserPool:
                     try:
                         await instance.context.close()
                         await instance.browser.close()
-                    except Exception:
+                    except Exception:  # nosec - best-effort cleanup
                         pass
 
         # Replenish pool outside the lock to avoid nested acquisitions

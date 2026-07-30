@@ -1,5 +1,5 @@
 import pytest
-from dataforge.backend.app.scraping.anti_bot import AntiBotDetector
+from app.scraping.anti_bot import AntiBotDetector
 
 
 class TestAntiBotDetector:

@@ -4,7 +4,7 @@ from __future__ import annotations
 from sqlalchemy import Column, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from dataforge.backend.app.models.base import Base, TimestampMixin
+from app.models.base import Base, TimestampMixin
 
 
 class UsageRecord(TimestampMixin, Base):

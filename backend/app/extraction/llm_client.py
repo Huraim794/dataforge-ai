@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any, Optional, cast
 
 import httpx
 
-from dataforge.backend.app.core.config import settings
-from dataforge.backend.app.monitoring.logger import get_logger
+from app.core.config import settings
+from app.monitoring.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -85,7 +85,7 @@ class LLMClient:
         config = self.PROVIDER_CONFIGS.get(self.provider)
         if not config:
             raise ValueError(f"Unsupported LLM provider: {self.provider}")
-        self._config = config
+        self._config: dict[str, Any] = config
 
     async def chat(
         self,

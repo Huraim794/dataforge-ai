@@ -1,12 +1,30 @@
-from dataforge.backend.app.proxy.rotator import ProxyRotator
+from app.proxy.rotator import ProxyRotator
 
 
 class TestProxyRotator:
     def setup_method(self):
         self.proxies = [
-            {"id": "1", "host": "192.168.1.1", "port": 8080, "weight": 1.0, "country": "US"},
-            {"id": "2", "host": "192.168.1.2", "port": 8080, "weight": 2.0, "country": "GB"},
-            {"id": "3", "host": "192.168.1.3", "port": 8080, "weight": 0.5, "country": "DE"},
+            {
+                "id": "1",
+                "host": "192.168.1.1",
+                "port": 8080,
+                "weight": 1.0,
+                "country": "US",
+            },
+            {
+                "id": "2",
+                "host": "192.168.1.2",
+                "port": 8080,
+                "weight": 2.0,
+                "country": "GB",
+            },
+            {
+                "id": "3",
+                "host": "192.168.1.3",
+                "port": 8080,
+                "weight": 0.5,
+                "country": "DE",
+            },
         ]
 
     def test_get_next_cycles_through_proxies(self):

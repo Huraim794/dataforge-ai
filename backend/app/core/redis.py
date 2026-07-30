@@ -5,7 +5,7 @@ from typing import Optional
 import redis.asyncio as aioredis
 from redis.asyncio import Redis
 
-from dataforge.backend.app.core.config import settings
+from app.core.config import settings
 
 _queue_client: Optional[Redis] = None
 _cache_client: Optional[Redis] = None

@@ -7,11 +7,11 @@ from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 from sqlalchemy import select
 
-from dataforge.backend.app.core.config import settings
-from dataforge.backend.app.core.database import async_session_factory
-from dataforge.backend.app.models.schedule import Schedule, ScheduleInterval
-from dataforge.backend.app.monitoring.logger import get_logger
-from dataforge.backend.app.worker.queue import QueueManager
+from app.core.config import settings
+from app.core.database import async_session_factory
+from app.models.schedule import Schedule, ScheduleInterval
+from app.monitoring.logger import get_logger
+from app.worker.queue import QueueManager
 
 logger = get_logger(__name__)
 

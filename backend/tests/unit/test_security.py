@@ -1,4 +1,4 @@
-from dataforge.backend.app.core.security import (
+from app.core.security import (
     hash_password,
     verify_password,
     generate_api_key,

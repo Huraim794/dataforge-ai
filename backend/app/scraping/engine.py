@@ -6,13 +6,13 @@ import time
 from pathlib import Path
 from typing import Any, Optional
 
-from dataforge.backend.app.core.config import settings
-from dataforge.backend.app.monitoring.logger import get_logger
-from dataforge.backend.app.monitoring.metrics import metrics_collector
-from dataforge.backend.app.proxy.manager import ProxyManager
-from dataforge.backend.app.scraping.anti_bot import AntiBotDetector
-from dataforge.backend.app.scraping.browser_pool import BrowserInstance, BrowserPool
-from dataforge.backend.app.scraping.captcha import CAPTCHAHandler
+from app.core.config import settings
+from app.monitoring.logger import get_logger
+from app.monitoring.metrics import metrics_collector
+from app.proxy.manager import ProxyManager
+from app.scraping.anti_bot import AntiBotDetector
+from app.scraping.browser_pool import BrowserInstance, BrowserPool
+from app.scraping.captcha import CAPTCHAHandler
 
 logger = get_logger(__name__)
 

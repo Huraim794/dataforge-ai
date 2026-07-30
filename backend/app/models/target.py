@@ -5,7 +5,7 @@ import enum
 from sqlalchemy import Boolean, Column, Enum, ForeignKey, Integer, JSON, String, Text
 from sqlalchemy.orm import relationship
 
-from dataforge.backend.app.models.base import Base, TimestampMixin
+from app.models.base import Base, TimestampMixin
 
 
 class TargetType(str, enum.Enum):

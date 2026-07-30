@@ -7,12 +7,12 @@ from fastapi.security import APIKeyHeader, HTTPAuthorizationCredentials, HTTPBea
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dataforge.backend.app.core.database import get_async_session
-from dataforge.backend.app.core.security import (
+from app.core.database import get_async_session
+from app.core.security import (
     hash_api_key,
     verify_access_token,
 )
-from dataforge.backend.app.models.user import APIKey
+from app.models.user import APIKey
 
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 bearer_scheme = HTTPBearer(auto_error=False)
@@ -101,7 +101,10 @@ async def get_optional_user(
 async def get_current_user_id(
     current_user: dict = Depends(get_current_user),
 ) -> str:
-    return current_user.get("sub")
+    sub = current_user.get("sub")
+    if sub is None:
+        raise ValueError("User ID not found in token")
+    return str(sub)
 
 
 def require_role(required_role: str):
@@ -124,7 +127,7 @@ async def verify_project_access(
     db: AsyncSession,
     required_role: Optional[str] = None,
 ) -> bool:
-    from dataforge.backend.app.models.project import ProjectMember
+    from app.models.project import ProjectMember
 
     result = await db.execute(
         select(ProjectMember).where(

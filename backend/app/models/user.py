@@ -14,7 +14,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
-from dataforge.backend.app.models.base import Base, TimestampMixin
+from app.models.base import Base, TimestampMixin
 
 
 class UserRole(str, enum.Enum):

@@ -25,7 +25,7 @@ class ExtractRequest(BaseModel):
     content: str = Field(..., description="The web content to extract from")
     url: Optional[str] = None
     title: Optional[str] = None
-    schema: Optional[dict] = None
+    extraction_schema: Optional[dict] = Field(default=None, alias="schema")
     prompt_template: Optional[str] = None
     fields: Optional[list[dict]] = None
     model: Optional[str] = None
@@ -56,7 +56,7 @@ async def extract_data(
     extractor = AIExtractor()
     result = await extractor.extract(
         content=request.content,
-        schema=request.schema,
+        schema=request.extraction_schema,
         prompt_template=request.prompt_template,
         fields=request.fields,
         url=request.url,

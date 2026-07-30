@@ -7,15 +7,15 @@ from typing import Any
 
 from sqlalchemy import update
 
-from dataforge.backend.app.core.database import async_session_factory
-from dataforge.backend.app.models.job import Job, JobStatus
-from dataforge.backend.app.models.run import Run, RunStatus
-from dataforge.backend.app.models.result import ScrapeResult
-from dataforge.backend.app.monitoring.logger import get_logger
-from dataforge.backend.app.monitoring.metrics import metrics_collector
-from dataforge.backend.app.proxy.manager import ProxyManager
-from dataforge.backend.app.scraping.engine import ScrapingEngine
-from dataforge.backend.app.worker.queue import QueueManager
+from app.core.database import async_session_factory
+from app.models.job import Job, JobStatus
+from app.models.run import Run, RunStatus
+from app.models.result import ScrapeResult
+from app.monitoring.logger import get_logger
+from app.monitoring.metrics import metrics_collector
+from app.proxy.manager import ProxyManager
+from app.scraping.engine import ScrapingEngine
+from app.worker.queue import QueueManager
 
 logger = get_logger(__name__)
 

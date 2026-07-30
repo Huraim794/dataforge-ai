@@ -1,6 +1,6 @@
-from dataforge.backend.app.proxy.manager import ProxyManager
-from dataforge.backend.app.proxy.checker import ProxyChecker
-from dataforge.backend.app.proxy.rotator import ProxyRotator
+from app.proxy.manager import ProxyManager
+from app.proxy.checker import ProxyChecker
+from app.proxy.rotator import ProxyRotator
 
 __all__ = [
     "ProxyManager",

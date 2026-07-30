@@ -6,8 +6,8 @@ from typing import Optional
 import httpx
 from playwright.async_api import Page
 
-from dataforge.backend.app.core.config import settings
-from dataforge.backend.app.monitoring.logger import get_logger
+from app.core.config import settings
+from app.monitoring.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -98,6 +98,8 @@ class CAPTCHAHandler:
         sitekey = captcha_info.get("sitekey")
 
         if captcha_type in ("recaptcha_v2", "hcaptcha", "turnstile"):
+            if sitekey is None:
+                return None
             return await self._solve_standard(page, captcha_type, sitekey, page_url)
         elif captcha_type == "recaptcha_v3":
             logger.info("reCAPTCHA v3 detected - no action needed (invisible)")

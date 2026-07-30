@@ -4,9 +4,9 @@ import json
 import time
 from typing import Any, Optional
 
-from dataforge.backend.app.extraction.llm_client import LLMClient, LLMResponse
-from dataforge.backend.app.monitoring.logger import get_logger
-from dataforge.backend.app.monitoring.metrics import metrics_collector
+from app.extraction.llm_client import LLMClient, LLMResponse
+from app.monitoring.logger import get_logger
+from app.monitoring.metrics import metrics_collector
 
 logger = get_logger(__name__)
 
