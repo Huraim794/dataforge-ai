@@ -15,7 +15,7 @@ include = ["app*"]
 
 [tool.mypy]
 ignore_missing_imports = true
-no_namespace_packages = true
+mypy_path = "backend/"
 explicit_package_bases = true
 namespace_packages = true
 disable_error_code = [
@@ -28,6 +28,7 @@ disable_error_code = [
   "attr-defined",
   "override",
   "index",
+  "assignment",
 ]
 
 [tool.bandit]

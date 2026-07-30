@@ -46,6 +46,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          pip install -e .
           pip install -r backend/requirements.txt
           pip install mypy
 
@@ -90,6 +91,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          pip install -e .
           pip install -r backend/requirements.txt
           pip install pytest pytest-asyncio pytest-cov
 
